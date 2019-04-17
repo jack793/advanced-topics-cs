@@ -1,0 +1,12 @@
+\documentclass[../Relazione.tex]{subfiles}
+
+\begin{document}
+\section{Archiviazione dei ticket \small(subnet \textcolor{red}{ROSSA})}
+    
+    \subsection{Descrizione e scelte progettuali}
+        Se un ticket presente in \texttt{Bill} (e quindi non ancora archiviato) presenta una somma di pagamenti effettuati maggiore o uguale all'ammontare totale della multa, allora la transizione \texttt{Check Completeness} può effettuare il fire (guardia \textit{[amountPaid(lPay) >= am]}), richiedendo anche la lista LTNum a \texttt{BillList}.\\
+        Abbiamo inserito nel controllo anche l'operatore > oltre ad = poiché i pagamenti in arrivo sono casuali quindi la loro somma potrebbe eccedere quella richiesta dalla multa.\\
+        Da \texttt{Check Completeness}, \texttt{Expire} e \texttt{Prepare for CC} vengono prodotti in \texttt{Archive Tickets} dei token \textit{ArchTicket} con \textit{ArchiveReason} rispettivamente 'PAID', 'EXPIRED' e 'CCOLL'.
+        
+\end{document}
+		

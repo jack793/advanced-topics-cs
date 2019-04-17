@@ -1,0 +1,19 @@
+\documentclass[../Relazione.tex]{subfiles}
+
+\begin{document}
+\section{Creazione, inserimento ed invio dei ticket \small (subnet  \textcolor{blue}{BLU})}
+    
+    \subsection{Descrizione del processo}
+        All'interno della \textit{subnet} in analisi, \texttt{Insert Ticket} rappresenta il primo task che verrà eseguito a seguito dell'arrivo di una violazione dall'esterno del sistema.
+        Questa attività necessita di un \textbf{Database} indipendente dove estrarre l'esatta somma da pagare (\textit{am:Amount}) relativa al singolo sinistro commesso (identificato da \texttt{art:INT}), oltre ad un \textbf{contatore autoincrementale} (inizializzato a 1) che aumenta progressivamente al sopraggiungere di nuove violazioni e che ha lo scopo di identificare univocamente ogni ticket (tramite la variabile \texttt{n:numTicket}).
+        Questa attività produce in output dei token provvisori di tipo \texttt{PreTicket} che contengono, oltre ad altre informazioni, la somma totale che il trasgressore dovrà pagare.\\
+        Successivamente alla creazione, i \texttt{PreTicket} sono preparati ed inviati al di fuori della sottorete attuale (tramite place \texttt{[Out] Sent Ticket}). Da qui in poi il flusso prosegue con l'archiviazione nel sistema di ticketing analizzata nella sezione successiva.
+        Infine, le transizioni \texttt{Prepare \& Send} ed \texttt{Insert PreTickets} possono effettuare il fire solamente se è disponibile almeno uno dei 15 token nel place \textit{Employees}.
+        
+    \subsection{Scelte progettuali}
+        Il primo problema da risolvere era inserire correttamente il tempo che le transizioni \texttt{Insert Ticket} e \texttt{Prepare \& Send} richiedevano (entrambi 1 day). Abbiamo scelto di inserire il delay necessario nelle etichette delle frecce in uscita (da \texttt{Insert Ticket} a \texttt{PreTicket Ready} e da \texttt{Prepare \& Send} a \texttt{Send Ticket}), al posto che sulla transizione stesse, altrimenti avrebbemo occupato la risorsa necessaria per fare \textit{fire} per tutta la durata di questo tempo. Così facendo, invece, possiamo eseguire le transizioni e liberare le risorse applicando il delay solamente nell produzione del token in uscita.\vspace{5mm}
+        
+        Per poter tener traccia del tempo di vita di un token \texttt{PreTicket} all'interno della subnet, prima che questo raggiunga \texttt{Send Ticket} abbiamo dovuto tenere una \textbf{copia} di questi token. La produzione di queste copie impiega in totale 11 giorni (produzione: 1 day, tempo di archiviazione EXPIRED: 10 days). Nel caso in cui siano disponibili sia il token in \texttt{PreTicket Ready} sia la sua copia in \texttt{Waiting PreTickets}, sarà possibile effettuare \textit{fire} della transizione \texttt{Expire}, che archivierà il \textit{Ticket} con etichetta 'EXPIRED'.
+        Visto che, in una situazione come questa, anche la transizione \texttt{Prepare \& Send} è disponibile per il \textit{fire}, ma  deve essere eseguita per forza \texttt{Expire} abbiamo attribuito a quest'ultima la priorità 'P\_HIGH'. Dato che alcuni token in \texttt{Waiting PreTickets} non vengono consumati (perché così configurati vengono consumati solo quelli che scadono), abbiamo dovuto creare un nuovo \textit{place} (\texttt{Sent Counter}), dal quale arrivano tutti i token prodotti da \texttt{Prepare \& Send}. Grazie alla transizione \texttt{Consume Sent} possiamo consumare anche le copie dei token prodotti da \texttt{Prepare \& Send} rimanenti in \texttt{Waiting PreTickets}.
+\end{document} 
+		

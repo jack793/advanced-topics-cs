@@ -1,0 +1,65 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage{style/style}
+\titlepage{}
+
+%\author{Zecchin Giacomo \& Fasolato Francesco }
+%\date{2017/05/21}
+\intestazioni{ATCS Report (Part I)}
+\pagestyle{empty}
+\pagenumbering{gobble}
+
+\begin{document}
+
+\selectlanguage{english}
+
+	\begin{titlepage}
+		\centering
+		\vspace{7cm}
+		{\huge\bfseries Advanced Topics in Computer Science\par}
+		\vspace*{0,5cm}
+		{\Large\bfseries Report for Part\#1 of Assignment (2018/2019)} \\*
+		\line(1,0){450} \\
+		\vspace*{2cm}
+		\begin{figure}[h!]
+		    \centering
+		    \includegraphics[scale=0.20]{figures/unipd_logo.png}
+		    \label{fig:unipd_logo}
+		\end{figure}
+		{\scshape\Large Università degli studi di Padova\\ \large Laurea Magistrale in Informatica \par}
+		\vspace{2cm}
+		{\LARGE\bfseries Ticket Management Petri Net in CPN Tools}\\
+		\line(1,0){450}\\
+		\vspace{1cm}
+		\begin{tabular}{l|l}
+			 Studenti  & \textbf{Fasolato Francesco} (1177742)\\ & \textbf{Zecchin Giacomo} (1179034) \\
+			 Docente    & \textbf{De Leoni Massimiliano} \\
+		\end{tabular}\\
+		\vspace*{3,5cm}
+        \today
+	\end{titlepage}
+
+\selectlanguage{italian}
+
+	%\pagestyle{myfront}
+
+	%\newpage		
+	%   \tableofcontents
+		%\listoffigures\vspace*{1cm}
+		%\listoftables
+
+	\label{LastFrontPage}
+		\newpage
+			\pagestyle{mymain}
+			\subfile{sections/ReteCPN}
+		\newpage
+			\subfile{sections/InserimentoTicket}
+		\newpage
+			\subfile{sections/PagamentiTicket}
+			\subfile{sections/CreditCollection}
+			\subfile{sections/ArchiviazioneTicket}
+        \newpage
+            \subfile{sections/SimulazioneCPN}
+	\label{LastPage}
+
+\end{document}

@@ -1,0 +1,27 @@
+\documentclass[../Relazione.tex]{subfiles}
+
+\begin{document}
+\section{Credit Collection \small(subnet NERA)}
+    
+    \subsection{Descrizione del processo}
+        Quando un token relativo ad un ticket appena aperto viene prodotto in \texttt{Bill}, una copia di questo viene anche  aggiunta, con relativo ritardo, a \texttt{Waiting Tickets}. La presenza di un token con lo stesso \textit{TicketNum} in \texttt{Bill} e \texttt{Waiting Tickets} permette il fire di \texttt{Prepare for CC},  richiedendo anche la presenza di almeno un impiegato disponibile, della lista \textit{lTicket} presente in \texttt{List CC Tickets} e di quella di \textit{TicketNum} presente in \texttt{BillList}. \texttt{Prepare for CC} consuma i token presenti in \texttt{Bill} e \texttt{Waiting Tickets} e:
+        
+        \begin{itemize}
+            \item restituisce la lista \textit{ListTickets} con l'aggiunta del token \textit{Ticket} proveniente da \texttt{Bill} a \texttt{List CC Tickets};
+            
+            \item restituisce la lista \textit{LTNum} a \texttt{BillList}, dopo aver tolto il \textit{TicketNum} relativo al ticket consumato;
+            
+            \item restituisce il token 'tu' ad \texttt{Employees}.
+        \end{itemize}
+        
+        Nel caso in cui un ticket venga archiviato per una ragione diversa da CCOLL, il suo \textit{TicketNum} verrà rimosso da \texttt{BillList} e, quando verrà prodotto in \texttt{Waiting Tickets} dopo il ritardo, potrà causare il fire di \texttt{Consume Not CCOLL} (data la guardia  \texttt{[not(mem LTNum n)]}), consumando i token che altrimenti rimarrebbero in \texttt{Waiting Tickets} alla fine della run.
+        
+        Dopo un certo intervallo di tempo e solo se la lista \textit{lTicket} non è vuota (guardia \texttt{[length(lTicket) > 0]}), \texttt{Send Out} può effettuare il fire. Questa transizione consuma tutti i ticket presenti nella lista \textit{lTicket} e produce un token corrispondente a questa lista nel place \texttt{Credits} (restituendo la lista vuota a \texttt{List CC Tickets}).
+        
+    \subsection{Scelte progettuali}
+        L'aggiunta del tempo massimo per saldare un ticket (180 giorni) è stata aggiunta alla freccia in uscita da \texttt{Prepare \& Send} verso \texttt{Waiting Tickets} poiché se fosse stata aggiunta alla transizione \texttt{Prepare \& Send}, questa avrebbe tenuto occupate le risorse necessarie per il suo fire per 180 giorni. In realtà il tempo è stato fissato a 182 giorni poiché un pagamento viene preso in carico solo dopo essere stato processato (e quindi 2 giorni dopo essere stato ricevuto). Se non avessimo questi 2 giorni di delay, avremmo escluso i saldi effettuati dopo 179 e 180 giorni dall'apertura del ticket, violando le specifiche del sistema.
+        
+        Alla transizione \texttt{Send Out} è stato collegato un \texttt{Timer} affinchè questa effettui il proprio fire ogni 30 giorni. Il place \texttt{Timer} contiente oggetti di tipo \textit{TUnit} creati appositamente da noi per aggiungere l'attributo 'timed' a \textit{UNIT}. Il primo token \textit{TUnit} presente in \texttt{Timer} viene inizializzato con un ritardo di 30 giorni e viene rimesso lì dopo il fire di \texttt{Send Out} con un delay di 30 giorni.
+        
+\end{document}
+		

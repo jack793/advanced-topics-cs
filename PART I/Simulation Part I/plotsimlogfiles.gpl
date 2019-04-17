@@ -1,0 +1,13 @@
+reset
+load "gnuplot/Credit_Collection_Tickets.gpl"
+pause -1 "Credit_Collection_Tickets"
+
+reset
+load "gnuplot/Paid_Tickets.gpl"
+pause -1 "Paid_Tickets"
+
+reset
+load "gnuplot/Expired_Tickets.gpl"
+pause -1 "Expired_Tickets"
+
+pause -1 "Done"

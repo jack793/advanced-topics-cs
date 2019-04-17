@@ -1,0 +1,15 @@
+\documentclass[../Relazione.tex]{subfiles}
+
+\begin{document}
+\section{Pagamenti \small(subnet \textcolor{PineGreen}{VERDE})}
+    
+    \subsection{Descrizione del processo}
+        Una volta che un pagamento viene ricevuto quest'ultimo viene anche processato.
+        Da \texttt{Prepare \& Send} viene prodotto un token di tipo \textit{Ticket} nel place \textit{Bill}. Inoltre salviamo un token di tipo \textit{TicketNum} che aggiungiamo alla lista di tipo \textit{ListTNum} all'interno di \texttt{BillList}. La transizione \texttt{Refuse Payment} che permette di consumare un pagamento all'interno di \texttt{Processed Payment}, può effettuare il \textit{fire} se e solo se il token relativo al pagamento in questione si riferisce ad un ticket già archiviato (ovvero il suo \textit{TicketNum} non è presente all'interno di \texttt{BillList}). Nel caso in cui il ticket per il quale è stato ricevuto il pagamento non sia stato archiviato, è possibile procedere al pagamento aggiornando la lista dei pagamenti del rispettivo ticket all'interno di \texttt{Bill}. Il place \texttt{Bill} contiente tutti i token dei ticket ricevuti da \texttt{Prepare \& Send} ed ancora attivi.
+        
+    \subsection{Scelte progettuali}
+        Per questa sezione abbiamo creato due place distinti (\texttt{Bill} e \texttt{BillList}). Bill è il place principale che contiene i token dei \textit{Ticket}, mentre BillList è un place ausiliario che mantiene solo una lista dei TicketNum corrispondenti ai \textit{Ticket} 'attivi' nella subnet. \texttt{Refuse Payment}, per poter effettuare il fire ha bisogno che il \textit{TicketNum} del \textit{Payment} non sia presente all'interno della lista di \texttt{BillList}. Il controllo viene effettuato grazie alla funzione \texttt{[not(mem LTNum n)]} (dove LTNum identifica la lista di \textit{TicketNum}).
+        
+        
+\end{document}
+		
