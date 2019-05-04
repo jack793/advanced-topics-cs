@@ -1,0 +1,12 @@
+\documentclass[../Relazione.tex]{subfiles}
+
+\begin{document}
+\section{Modifiche a Ticket Management}
+    Rispetto alla rete di Petri riferita alla prima parte, è stata apportata una sola modifica.
+    Abbiamo deciso di attribuire alla transizione \texttt{Check Completeness} la priorità \textit{P\_HIGH}. Eseguendo più volte la simulazione per trovare il corretto numero di impiegati da assumere, ci siamo accorti che era presente un caso limite: al 182-esimo giorno sarebbe stato prodotto un token in \texttt{Waiting Tickets} e questo avrebbe fatto si che la transizione \texttt{Prepare for CC} avesse la stessa probabilità di effettuare il fire di \texttt{Check Completeness}. Questo non sarebbe stato corretto poiché anche al giorno 182 è possibile chiudere il ticket.
+    
+    Grazie alla priorità conferita siamo così sicuri che, nel caso in cui ci sia la possibilità che entrambe queste transizioni possano effettuare il fire lo stesso giorno (il 182-esimo), la scelta ricada sempre su \texttt{Check Completeness}.
+        
+         
+\end{document} 
+		
