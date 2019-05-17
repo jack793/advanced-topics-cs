@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<specificationSet xmlns="http://www.yawlfoundation.org/yawlschema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.0" xsi:schemaLocation="http://www.yawlfoundation.org/yawlschema http://www.yawlfoundation.org/yawlschema/YAWL_Schema4.0.xsd">
+  <specification uri="InsuranceClaim-WithData">
+    <documentation>No description provided</documentation>
+    <metaData>
+      <creator>max</creator>
+      <description>No description provided</description>
+      <coverage>4.2.759</coverage>
+      <version>0.22</version>
+      <persistent>false</persistent>
+      <identifier>UID_a5496bf5-6917-4807-a6e7-5c80ca51ff18</identifier>
+    </metaData>
+    <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" />
+    <decomposition id="Net" isRootNet="true" xsi:type="NetFactsType">
+      <localVariable>
+        <index>0</index>
+        <name>InsurancePresent</name>
+        <type>boolean</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+        <initialValue>false</initialValue>
+      </localVariable>
+      <localVariable>
+        <index>1</index>
+        <name>DamagePresent</name>
+        <type>boolean</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+        <initialValue>false</initialValue>
+      </localVariable>
+      <processControlElements>
+        <inputCondition id="InputCondition">
+          <flowsInto>
+            <nextElementRef id="Register" />
+          </flowsInto>
+        </inputCondition>
+        <task id="Register">
+          <name>Register</name>
+          <flowsInto>
+            <nextElementRef id="Check_Damage" />
+          </flowsInto>
+          <flowsInto>
+            <nextElementRef id="Check_Insurance" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <resourcing>
+            <offer initiator="system">
+              <distributionSet>
+                <initialSet>
+                  <role>RO-eef4d92e-6a32-4e71-9678-47d48f7c8a7f</role>
+                </initialSet>
+              </distributionSet>
+            </offer>
+            <allocate initiator="system">
+              <allocator>
+                <name>RoundRobinByTime</name>
+              </allocator>
+            </allocate>
+            <start initiator="system" />
+          </resourcing>
+          <decomposesTo id="Register" />
+        </task>
+        <task id="Check_Damage">
+          <name>Check Damage</name>
+          <flowsInto>
+            <nextElementRef id="Dummy" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <completedMappings>
+            <mapping>
+              <expression query="&lt;DamagePresent&gt;{/Check_Damage/ThereIsADamage/text()}&lt;/DamagePresent&gt;" />
+              <mapsTo>DamagePresent</mapsTo>
+            </mapping>
+            <mapping>
+              <expression query="&lt;InsurancePresent&gt;{/Check_Damage/ThereIsADamage/text()}&lt;/InsurancePresent&gt;" />
+              <mapsTo>InsurancePresent</mapsTo>
+            </mapping>
+          </completedMappings>
+          <resourcing>
+            <offer initiator="system">
+              <distributionSet>
+                <initialSet />
+              </distributionSet>
+            </offer>
+            <allocate initiator="system">
+              <allocator>
+                <name>RandomChoice</name>
+              </allocator>
+            </allocate>
+            <start initiator="system" />
+          </resourcing>
+          <decomposesTo id="Check_Damage" />
+        </task>
+        <task id="Check_Insurance">
+          <name>Check Insurance</name>
+          <flowsInto>
+            <nextElementRef id="Dummy" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <completedMappings>
+            <mapping>
+              <expression query="&lt;InsurancePresent&gt;{/Check_Insurance/ThereIsAnInsurance/text()}&lt;/InsurancePresent&gt;" />
+              <mapsTo>InsurancePresent</mapsTo>
+            </mapping>
+          </completedMappings>
+          <resourcing>
+            <offer initiator="system">
+              <distributionSet>
+                <initialSet />
+              </distributionSet>
+            </offer>
+            <allocate initiator="system">
+              <allocator>
+                <name>RandomChoice</name>
+              </allocator>
+            </allocate>
+            <start initiator="system" />
+          </resourcing>
+          <decomposesTo id="Check_Insurance" />
+        </task>
+        <task id="Dummy">
+          <name>Dummy</name>
+          <flowsInto>
+            <nextElementRef id="Pay" />
+            <predicate ordering="0">/Net/DamagePresent/text()=true() and /Net/InsurancePresent/text()=true()</predicate>
+          </flowsInto>
+          <flowsInto>
+            <nextElementRef id="Cancel" />
+            <isDefaultFlow />
+          </flowsInto>
+          <join code="and" />
+          <split code="xor" />
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+        </task>
+        <task id="Cancel">
+          <name>Cancel</name>
+          <flowsInto>
+            <nextElementRef id="OutputCondition" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <startingMappings>
+            <mapping>
+              <expression query="&lt;InsuranceExist&gt;{/Net/InsurancePresent/text()}&lt;/InsuranceExist&gt;" />
+              <mapsTo>InsuranceExist</mapsTo>
+            </mapping>
+            <mapping>
+              <expression query="&lt;DamageExists&gt;{boolean(/Net/DamagePresent)}&lt;/DamageExists&gt;" />
+              <mapsTo>DamageExists</mapsTo>
+            </mapping>
+          </startingMappings>
+          <resourcing>
+            <offer initiator="system">
+              <distributionSet>
+                <initialSet />
+              </distributionSet>
+            </offer>
+            <allocate initiator="system">
+              <allocator>
+                <name>RandomChoice</name>
+              </allocator>
+            </allocate>
+            <start initiator="system" />
+          </resourcing>
+          <decomposesTo id="Cancel" />
+        </task>
+        <task id="Pay">
+          <name>Pay</name>
+          <flowsInto>
+            <nextElementRef id="OutputCondition" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <resourcing>
+            <offer initiator="system">
+              <distributionSet>
+                <initialSet />
+              </distributionSet>
+            </offer>
+            <allocate initiator="system">
+              <allocator>
+                <name>RandomChoice</name>
+              </allocator>
+            </allocate>
+            <start initiator="system" />
+          </resourcing>
+          <decomposesTo id="Pay" />
+        </task>
+        <outputCondition id="OutputCondition" />
+      </processControlElements>
+    </decomposition>
+    <decomposition id="Cancel" xsi:type="WebServiceGatewayFactsType">
+      <inputParam>
+        <index>0</index>
+        <name>InsuranceExist</name>
+        <type>string</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+      </inputParam>
+      <inputParam>
+        <index>1</index>
+        <name>DamageExists</name>
+        <type>string</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+      </inputParam>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="Check_Damage" xsi:type="WebServiceGatewayFactsType">
+      <name>Check Damage</name>
+      <outputParam>
+        <index>0</index>
+        <name>ThereIsADamage</name>
+        <type>boolean</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+        <defaultValue>false</defaultValue>
+      </outputParam>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="Check_Insurance" xsi:type="WebServiceGatewayFactsType">
+      <name>Check Insurance</name>
+      <outputParam>
+        <index>0</index>
+        <name>ThereIsAnInsurance</name>
+        <type>boolean</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+        <defaultValue />
+      </outputParam>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="Pay" xsi:type="WebServiceGatewayFactsType">
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="Register" xsi:type="WebServiceGatewayFactsType">
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+  </specification>
+  <layout>
+    <locale language="it" country="IT"/>
+    <specification id="InsuranceClaim-WithData" defaultBgColor="-16777165">
+      <size w="63" h="33"/>
+      <net id="Net">
+        <bounds x="0" y="0" w="1044" h="571"/>
+        <frame x="0" y="0" w="1047" h="574"/>
+        <viewport x="0" y="0" w="1047" h="574"/>
+        <vertex id="OutputCondition">
+          <attributes>
+            <bounds x="952" y="348" w="32" h="32"/>
+          </attributes>
+        </vertex>
+        <vertex id="InputCondition">
+          <attributes>
+            <bounds x="36" y="328" w="32" h="32"/>
+          </attributes>
+        </vertex>
+        <container id="Cancel">
+          <vertex>
+            <attributes>
+              <bounds x="792" y="456" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="760" y="488" w="97" h="21"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Register">
+          <vertex>
+            <attributes>
+              <bounds x="176" y="340" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="148" y="372" w="96" h="20"/>
+            </attributes>
+          </label>
+          <decorator type="AND_split">
+            <position>13</position>
+            <attributes>
+              <bounds x="207" y="340" w="11" h="32"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="Pay">
+          <vertex>
+            <attributes>
+              <bounds x="792" y="256" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="760" y="288" w="96" h="20"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Check_Insurance">
+          <vertex>
+            <attributes>
+              <bounds x="364" y="228" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="332" y="260" w="96" h="40"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Dummy">
+          <vertex>
+            <attributes>
+              <bounds x="552" y="348" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="520" y="380" w="96" h="20"/>
+            </attributes>
+          </label>
+          <decorator type="XOR_split">
+            <position>13</position>
+            <attributes>
+              <bounds x="583" y="348" w="11" h="32"/>
+            </attributes>
+          </decorator>
+          <decorator type="AND_join">
+            <position>12</position>
+            <attributes>
+              <bounds x="542" y="348" w="11" h="32"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="Check_Damage">
+          <vertex>
+            <attributes>
+              <bounds x="376" y="468" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="344" y="500" w="96" h="20"/>
+            </attributes>
+          </label>
+        </container>
+        <flow source="Register" target="Check_Damage">
+          <ports in="3" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Pay" target="OutputCondition">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Cancel" target="OutputCondition">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Check_Damage" target="Dummy">
+          <ports in="13" out="3"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="InputCondition" target="Register">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Register" target="Check_Insurance">
+          <ports in="2" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Dummy" target="Pay">
+          <ports in="2" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Dummy" target="Cancel">
+          <ports in="3" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Check_Insurance" target="Dummy">
+          <ports in="13" out="2"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+      </net>
+      <labelFontSize>13</labelFontSize>
+    </specification>
+  </layout>
+</specificationSet>

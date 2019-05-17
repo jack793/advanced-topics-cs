@@ -1,0 +1,1108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<specificationSet xmlns="http://www.yawlfoundation.org/yawlschema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.0" xsi:schemaLocation="http://www.yawlfoundation.org/yawlschema http://www.yawlfoundation.org/yawlschema/YAWL_Schema4.0.xsd">
+  <specification uri="Practical">
+    <documentation>No description provided</documentation>
+    <metaData>
+      <creator>franz</creator>
+      <description>No description provided</description>
+      <coverage>4.2.759</coverage>
+      <version>0.18</version>
+      <persistent>false</persistent>
+      <identifier>UID_c4882143-1d67-4bec-b976-4534aba58a4c</identifier>
+    </metaData>
+    <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" />
+    <decomposition id="Net" isRootNet="true" xsi:type="NetFactsType">
+      <localVariable>
+        <index>0</index>
+        <name>Name</name>
+        <type>string</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+        <initialValue />
+      </localVariable>
+      <localVariable>
+        <index>1</index>
+        <name>Address</name>
+        <type>string</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+        <initialValue />
+      </localVariable>
+      <localVariable>
+        <index>2</index>
+        <name>Age</name>
+        <type>int</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+        <initialValue>18</initialValue>
+      </localVariable>
+      <localVariable>
+        <index>3</index>
+        <name>LastPayRoll</name>
+        <type>float</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+        <initialValue>0</initialValue>
+      </localVariable>
+      <localVariable>
+        <index>4</index>
+        <name>FamilyIncome</name>
+        <type>float</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+        <initialValue>0</initialValue>
+      </localVariable>
+      <localVariable>
+        <index>5</index>
+        <name>IsTrustworthy</name>
+        <type>boolean</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+        <initialValue>false</initialValue>
+      </localVariable>
+      <localVariable>
+        <index>6</index>
+        <name>IsDocComplete</name>
+        <type>boolean</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+        <initialValue>false</initialValue>
+      </localVariable>
+      <localVariable>
+        <index>7</index>
+        <name>IsPassed</name>
+        <type>boolean</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+        <initialValue>false</initialValue>
+      </localVariable>
+      <localVariable>
+        <index>8</index>
+        <name>installments</name>
+        <type>int</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+        <initialValue>0</initialValue>
+      </localVariable>
+      <localVariable>
+        <index>9</index>
+        <name>benefit</name>
+        <type>int</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+        <initialValue>0</initialValue>
+      </localVariable>
+      <processControlElements>
+        <inputCondition id="InputCondition">
+          <flowsInto>
+            <nextElementRef id="Task_Register" />
+          </flowsInto>
+        </inputCondition>
+        <task id="Task_Register">
+          <name>Task Register</name>
+          <flowsInto>
+            <nextElementRef id="Request_to_the_last_employeer" />
+          </flowsInto>
+          <flowsInto>
+            <nextElementRef id="Request_for_family_income" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <completedMappings>
+            <mapping>
+              <expression query="&lt;Address&gt;{/IdentifyEmployee/Address/text()}&lt;/Address&gt;" />
+              <mapsTo>Address</mapsTo>
+            </mapping>
+            <mapping>
+              <expression query="&lt;Name&gt;{/IdentifyEmployee/Name/text()}&lt;/Name&gt;" />
+              <mapsTo>Name</mapsTo>
+            </mapping>
+            <mapping>
+              <expression query="&lt;Age&gt;{/IdentifyEmployee/Age/text()}&lt;/Age&gt;" />
+              <mapsTo>Age</mapsTo>
+            </mapping>
+          </completedMappings>
+          <resourcing>
+            <offer initiator="system">
+              <distributionSet>
+                <initialSet />
+              </distributionSet>
+            </offer>
+            <allocate initiator="system">
+              <allocator>
+                <name>RandomChoice</name>
+              </allocator>
+            </allocate>
+            <start initiator="system" />
+          </resourcing>
+          <decomposesTo id="IdentifyEmployee" />
+        </task>
+        <task id="Request_for_family_income">
+          <name>Request for family income</name>
+          <flowsInto>
+            <nextElementRef id="Dummy" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <completedMappings>
+            <mapping>
+              <expression query="&lt;FamilyIncome&gt;{/FamilyIncomeProvide/FamilyIncome/text()}&lt;/FamilyIncome&gt;" />
+              <mapsTo>FamilyIncome</mapsTo>
+            </mapping>
+          </completedMappings>
+          <resourcing>
+            <offer initiator="system">
+              <distributionSet>
+                <initialSet />
+              </distributionSet>
+            </offer>
+            <allocate initiator="system">
+              <allocator>
+                <name>RandomChoice</name>
+              </allocator>
+            </allocate>
+            <start initiator="system" />
+          </resourcing>
+          <decomposesTo id="FamilyIncomeProvide" />
+        </task>
+        <task id="Request_to_the_last_employeer">
+          <name>Request to the last employeer</name>
+          <flowsInto>
+            <nextElementRef id="Dummy" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <completedMappings>
+            <mapping>
+              <expression query="&lt;LastPayRoll&gt;{/LastPayrollRequest/LastPayRoll/text()}&lt;/LastPayRoll&gt;" />
+              <mapsTo>LastPayRoll</mapsTo>
+            </mapping>
+          </completedMappings>
+          <resourcing>
+            <offer initiator="system">
+              <distributionSet>
+                <initialSet />
+              </distributionSet>
+            </offer>
+            <allocate initiator="system">
+              <allocator>
+                <name>RandomChoice</name>
+              </allocator>
+            </allocate>
+            <start initiator="system" />
+          </resourcing>
+          <decomposesTo id="LastPayrollRequest" />
+        </task>
+        <task id="Dummy">
+          <name>Dummy</name>
+          <flowsInto>
+            <nextElementRef id="Consult_Archive" />
+            <isDefaultFlow />
+          </flowsInto>
+          <flowsInto>
+            <nextElementRef id="Document_Check" />
+            <predicate ordering="0">number(/Net/Age/text())&lt;30 or number(/Net/Age/text())&gt;60</predicate>
+          </flowsInto>
+          <join code="and" />
+          <split code="xor" />
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+        </task>
+        <task id="Consult_Archive">
+          <name>Consult Archive</name>
+          <flowsInto>
+            <nextElementRef id="Document_Check" />
+            <predicate ordering="0">/Net/IsTrustworthy/text()=false()</predicate>
+          </flowsInto>
+          <flowsInto>
+            <nextElementRef id="Assess_Benefit" />
+            <isDefaultFlow />
+          </flowsInto>
+          <join code="and" />
+          <split code="xor" />
+          <completedMappings>
+            <mapping>
+              <expression query="&lt;IsTrustworthy&gt;{/CheckHistoricalArchive/IsTrustworthy/text()}&lt;/IsTrustworthy&gt;" />
+              <mapsTo>IsTrustworthy</mapsTo>
+            </mapping>
+          </completedMappings>
+          <resourcing>
+            <offer initiator="system">
+              <distributionSet>
+                <initialSet />
+              </distributionSet>
+            </offer>
+            <allocate initiator="system">
+              <allocator>
+                <name>RandomChoice</name>
+              </allocator>
+            </allocate>
+            <start initiator="system" />
+          </resourcing>
+          <decomposesTo id="CheckHistoricalArchive" />
+        </task>
+        <task id="Document_Check">
+          <name>Document Check</name>
+          <flowsInto>
+            <nextElementRef id="Assess_Benefit" />
+            <predicate ordering="0">/Net/IsDocComplete/text()=true()</predicate>
+          </flowsInto>
+          <flowsInto>
+            <nextElementRef id="Inform_Rejection" />
+            <isDefaultFlow />
+          </flowsInto>
+          <join code="xor" />
+          <split code="xor" />
+          <completedMappings>
+            <mapping>
+              <expression query="&lt;IsDocComplete&gt;{/DocumentCheck/IsDocComplete/text()}&lt;/IsDocComplete&gt;" />
+              <mapsTo>IsDocComplete</mapsTo>
+            </mapping>
+          </completedMappings>
+          <resourcing>
+            <offer initiator="system">
+              <distributionSet>
+                <initialSet />
+              </distributionSet>
+            </offer>
+            <allocate initiator="system">
+              <allocator>
+                <name>RandomChoice</name>
+              </allocator>
+            </allocate>
+            <start initiator="system" />
+          </resourcing>
+          <decomposesTo id="DocumentCheck" />
+        </task>
+        <task id="Assess_Benefit">
+          <name>Assess Benefit</name>
+          <flowsInto>
+            <nextElementRef id="Inform_Rejection" />
+            <isDefaultFlow />
+          </flowsInto>
+          <flowsInto>
+            <nextElementRef id="Determine_benefits_and_n.installements" />
+            <predicate ordering="0">/Net/IsDocComplete/text()=true()</predicate>
+          </flowsInto>
+          <join code="xor" />
+          <split code="xor" />
+          <startingMappings>
+            <mapping>
+              <expression query="&lt;LastPayRoll&gt;{/Net/LastPayRoll/text()}&lt;/LastPayRoll&gt;" />
+              <mapsTo>LastPayRoll</mapsTo>
+            </mapping>
+            <mapping>
+              <expression query="&lt;Address&gt;{/Net/Address/text()}&lt;/Address&gt;" />
+              <mapsTo>Address</mapsTo>
+            </mapping>
+            <mapping>
+              <expression query="&lt;FamilyIncome&gt;{/Net/FamilyIncome/text()}&lt;/FamilyIncome&gt;" />
+              <mapsTo>FamilyIncome</mapsTo>
+            </mapping>
+            <mapping>
+              <expression query="&lt;Age&gt;{/Net/Age/text()}&lt;/Age&gt;" />
+              <mapsTo>Age</mapsTo>
+            </mapping>
+            <mapping>
+              <expression query="&lt;Name&gt;{/Net/Name/text()}&lt;/Name&gt;" />
+              <mapsTo>Name</mapsTo>
+            </mapping>
+          </startingMappings>
+          <completedMappings>
+            <mapping>
+              <expression query="&lt;IsPassed&gt;{/MakeUBAssessment/IsPassed/text()}&lt;/IsPassed&gt;" />
+              <mapsTo>IsPassed</mapsTo>
+            </mapping>
+          </completedMappings>
+          <resourcing>
+            <offer initiator="system">
+              <distributionSet>
+                <initialSet />
+              </distributionSet>
+            </offer>
+            <allocate initiator="system">
+              <allocator>
+                <name>RandomChoice</name>
+              </allocator>
+            </allocate>
+            <start initiator="system" />
+          </resourcing>
+          <decomposesTo id="MakeUBAssessment" />
+        </task>
+        <task id="Inform_Rejection">
+          <name>Inform Rejection</name>
+          <flowsInto>
+            <nextElementRef id="C" />
+            <isDefaultFlow />
+          </flowsInto>
+          <join code="xor" />
+          <split code="xor" />
+          <resourcing>
+            <offer initiator="system">
+              <distributionSet>
+                <initialSet />
+              </distributionSet>
+            </offer>
+            <allocate initiator="system">
+              <allocator>
+                <name>RandomChoice</name>
+              </allocator>
+            </allocate>
+            <start initiator="system" />
+          </resourcing>
+          <decomposesTo id="InformApplicant" />
+        </task>
+        <condition id="C">
+          <flowsInto>
+            <nextElementRef id="Timeout" />
+          </flowsInto>
+          <flowsInto>
+            <nextElementRef id="Receive_Appeal" />
+          </flowsInto>
+        </condition>
+        <task id="Determine_benefits_and_n.installements">
+          <name>Determine benefits and n.installements</name>
+          <flowsInto>
+            <nextElementRef id="Pay" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+        </task>
+        <task id="Receive_Appeal">
+          <name>Receive Appeal</name>
+          <flowsInto>
+            <nextElementRef id="Process_Documents" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <resourcing>
+            <offer initiator="system">
+              <distributionSet>
+                <initialSet />
+              </distributionSet>
+            </offer>
+            <allocate initiator="system">
+              <allocator>
+                <name>RandomChoice</name>
+              </allocator>
+            </allocate>
+            <start initiator="system" />
+          </resourcing>
+          <decomposesTo id="ReceiveAdditionalDocuments" />
+        </task>
+        <task id="Timeout">
+          <name>Timeout</name>
+          <flowsInto>
+            <nextElementRef id="OutputCondition" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <timer>
+            <trigger>OnEnabled</trigger>
+            <duration>PT1M</duration>
+          </timer>
+          <resourcing>
+            <offer initiator="system">
+              <distributionSet>
+                <initialSet />
+              </distributionSet>
+            </offer>
+            <allocate initiator="system">
+              <allocator>
+                <name>RandomChoice</name>
+              </allocator>
+            </allocate>
+            <start initiator="system" />
+          </resourcing>
+          <decomposesTo id="Timeout" />
+        </task>
+        <task id="Pay">
+          <name>Pay</name>
+          <flowsInto>
+            <nextElementRef id="OutputCondition" />
+            <predicate ordering="0">true()</predicate>
+          </flowsInto>
+          <flowsInto>
+            <nextElementRef id="Pay" />
+            <isDefaultFlow />
+          </flowsInto>
+          <join code="xor" />
+          <split code="xor" />
+          <startingMappings>
+            <mapping>
+              <expression query="&lt;query&gt;{number(/Net/installments/text())-1}&lt;/query&gt;" />
+              <mapsTo>query</mapsTo>
+            </mapping>
+            <mapping>
+              <expression query="&lt;benefit&gt;{/Net/benefit/text()}&lt;/benefit&gt;" />
+              <mapsTo>benefit</mapsTo>
+            </mapping>
+          </startingMappings>
+          <timer>
+            <trigger>OnEnabled</trigger>
+            <duration>PT1M</duration>
+          </timer>
+          <resourcing>
+            <offer initiator="system">
+              <distributionSet>
+                <initialSet />
+              </distributionSet>
+            </offer>
+            <allocate initiator="system">
+              <allocator>
+                <name>RandomChoice</name>
+              </allocator>
+            </allocate>
+            <start initiator="system" />
+          </resourcing>
+          <decomposesTo id="PayUB" />
+        </task>
+        <task id="Process_Documents">
+          <name>Process Documents</name>
+          <flowsInto>
+            <nextElementRef id="Document_Check" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+        </task>
+        <outputCondition id="OutputCondition" />
+      </processControlElements>
+    </decomposition>
+    <decomposition id="CheckHistoricalArchive" xsi:type="WebServiceGatewayFactsType">
+      <outputParam>
+        <index>0</index>
+        <name>IsTrustworthy</name>
+        <type>boolean</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+        <defaultValue />
+      </outputParam>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="DocumentCheck" xsi:type="WebServiceGatewayFactsType">
+      <outputParam>
+        <index>0</index>
+        <name>IsDocComplete</name>
+        <type>boolean</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+        <defaultValue />
+      </outputParam>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="FamilyIncomeProvide" xsi:type="WebServiceGatewayFactsType">
+      <outputParam>
+        <index>0</index>
+        <name>FamilyIncome</name>
+        <type>float</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+        <defaultValue />
+      </outputParam>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="IdentifyEmployee" xsi:type="WebServiceGatewayFactsType">
+      <outputParam>
+        <index>0</index>
+        <name>Name</name>
+        <type>string</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+        <defaultValue />
+      </outputParam>
+      <outputParam>
+        <index>1</index>
+        <name>Address</name>
+        <type>string</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+        <defaultValue />
+      </outputParam>
+      <outputParam>
+        <index>2</index>
+        <name>Age</name>
+        <type>int</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+        <defaultValue>18</defaultValue>
+      </outputParam>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="InformApplicant" xsi:type="WebServiceGatewayFactsType">
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="LastPayrollRequest" xsi:type="WebServiceGatewayFactsType">
+      <outputParam>
+        <index>0</index>
+        <name>LastPayRoll</name>
+        <type>float</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+        <defaultValue />
+      </outputParam>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="MakeUBAssessment" xsi:type="WebServiceGatewayFactsType">
+      <inputParam>
+        <index>0</index>
+        <name>Name</name>
+        <type>string</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+      </inputParam>
+      <inputParam>
+        <index>1</index>
+        <name>Address</name>
+        <type>string</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+      </inputParam>
+      <inputParam>
+        <index>2</index>
+        <name>Age</name>
+        <type>int</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+      </inputParam>
+      <inputParam>
+        <index>3</index>
+        <name>LastPayRoll</name>
+        <type>float</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+      </inputParam>
+      <inputParam>
+        <index>4</index>
+        <name>FamilyIncome</name>
+        <type>float</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+      </inputParam>
+      <outputParam>
+        <index>5</index>
+        <name>IsPassed</name>
+        <type>boolean</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+        <defaultValue />
+      </outputParam>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="PayUB" xsi:type="WebServiceGatewayFactsType">
+      <inputParam>
+        <index>0</index>
+        <documentation>The XQuery to evaluate</documentation>
+        <name>query</name>
+        <type>string</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+      </inputParam>
+      <inputParam>
+        <index>2</index>
+        <name>benefit</name>
+        <type>int</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+      </inputParam>
+      <outputParam>
+        <index>1</index>
+        <documentation>The result of the evaluation</documentation>
+        <name>result</name>
+        <type>int</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+      </outputParam>
+      <outputParam>
+        <index>2</index>
+        <name>benefit</name>
+        <type>int</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+      </outputParam>
+      <codelet>org.yawlfoundation.yawl.resourcing.codelets.XQueryEvaluator</codelet>
+      <externalInteraction>automated</externalInteraction>
+    </decomposition>
+    <decomposition id="ReceiveAdditionalDocuments" xsi:type="WebServiceGatewayFactsType">
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="Timeout" xsi:type="WebServiceGatewayFactsType">
+      <externalInteraction>automated</externalInteraction>
+    </decomposition>
+  </specification>
+  <layout>
+    <locale language="it" country="IT"/>
+    <specification id="Practical" defaultBgColor="-16777165">
+      <size w="58" h="26"/>
+      <net id="Net" bgColor="-16777216">
+        <bounds x="0" y="-24" w="1940" h="1220"/>
+        <frame x="0" y="0" w="1047" h="574"/>
+        <viewport x="0" y="0" w="1047" h="574"/>
+        <bgImage>/Users/Giacomo/Desktop/Documenti/Chuck-norris.jpg</bgImage>
+        <vertex id="C">
+          <attributes>
+            <bounds x="808" y="360" w="32" h="32"/>
+            <backgroundColor>-16737793</backgroundColor>
+          </attributes>
+        </vertex>
+        <vertex id="OutputCondition">
+          <attributes>
+            <bounds x="964" y="188" w="28" h="28"/>
+          </attributes>
+        </vertex>
+        <vertex id="InputCondition">
+          <attributes>
+            <bounds x="24" y="236" w="28" h="28"/>
+          </attributes>
+        </vertex>
+        <container id="Task_Register">
+          <vertex>
+            <attributes>
+              <bounds x="108" y="236" w="28" h="28"/>
+              <backgroundColor>-13395457</backgroundColor>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="86" y="264" w="84" h="32"/>
+              <foregroundColor>-13382401</foregroundColor>
+            </attributes>
+          </label>
+          <decorator type="AND_split">
+            <position>13</position>
+            <attributes>
+              <bounds x="135" y="236" w="10" h="28"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="Timeout">
+          <vertex>
+            <attributes>
+              <bounds x="888" y="316" w="28" h="28"/>
+              <backgroundColor>-13395457</backgroundColor>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="864" y="344" w="85" h="17"/>
+              <foregroundColor>-13382401</foregroundColor>
+            </attributes>
+          </label>
+        </container>
+        <container id="Pay">
+          <vertex>
+            <attributes>
+              <bounds x="808" y="116" w="28" h="28"/>
+              <backgroundColor>-13395457</backgroundColor>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="782" y="144" w="84" h="16"/>
+              <foregroundColor>-16724737</foregroundColor>
+            </attributes>
+          </label>
+          <decorator type="XOR_split">
+            <position>13</position>
+            <attributes>
+              <bounds x="835" y="116" w="9" h="28"/>
+            </attributes>
+          </decorator>
+          <decorator type="XOR_join">
+            <position>12</position>
+            <attributes>
+              <bounds x="800" y="116" w="9" h="28"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="Consult_Archive">
+          <vertex>
+            <attributes>
+              <bounds x="484" y="60" w="28" h="28"/>
+              <backgroundColor>-13395457</backgroundColor>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="462" y="88" w="84" h="32"/>
+              <foregroundColor>-13382401</foregroundColor>
+            </attributes>
+          </label>
+          <decorator type="XOR_split">
+            <position>13</position>
+            <attributes>
+              <bounds x="511" y="60" w="10" h="28"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="Request_for_family_income">
+          <vertex>
+            <attributes>
+              <bounds x="208" y="344" w="28" h="28"/>
+              <backgroundColor>-13395457</backgroundColor>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="182" y="372" w="84" h="48"/>
+              <foregroundColor>-13382401</foregroundColor>
+            </attributes>
+          </label>
+        </container>
+        <container id="Document_Check">
+          <vertex>
+            <attributes>
+              <bounds x="499" y="360" w="28" h="28"/>
+              <backgroundColor>-13395457</backgroundColor>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="470" y="388" w="84" h="32"/>
+              <foregroundColor>-13382401</foregroundColor>
+            </attributes>
+          </label>
+          <decorator type="XOR_split">
+            <position>13</position>
+            <attributes>
+              <bounds x="526" y="360" w="10" h="28"/>
+            </attributes>
+          </decorator>
+          <decorator type="XOR_join">
+            <position>12</position>
+            <attributes>
+              <bounds x="490" y="360" w="10" h="28"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="Assess_Benefit">
+          <vertex>
+            <attributes>
+              <bounds x="639" y="244" w="28" h="28"/>
+              <backgroundColor>-13395457</backgroundColor>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="610" y="272" w="84" h="32"/>
+              <foregroundColor>-13382401</foregroundColor>
+            </attributes>
+          </label>
+          <decorator type="XOR_split">
+            <position>13</position>
+            <attributes>
+              <bounds x="666" y="244" w="10" h="28"/>
+            </attributes>
+          </decorator>
+          <decorator type="XOR_join">
+            <position>12</position>
+            <attributes>
+              <bounds x="630" y="244" w="10" h="28"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="Request_to_the_last_employeer">
+          <vertex>
+            <attributes>
+              <bounds x="204" y="132" w="28" h="28"/>
+              <backgroundColor>-13395457</backgroundColor>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="178" y="160" w="84" h="48"/>
+              <foregroundColor>-13382401</foregroundColor>
+            </attributes>
+          </label>
+        </container>
+        <container id="Receive_Appeal">
+          <vertex>
+            <attributes>
+              <bounds x="684" y="472" w="28" h="28"/>
+              <backgroundColor>-13395457</backgroundColor>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="658" y="500" w="84" h="32"/>
+              <foregroundColor>-13382401</foregroundColor>
+            </attributes>
+          </label>
+        </container>
+        <container id="Process_Documents">
+          <vertex>
+            <attributes>
+              <bounds x="424" y="472" w="32" h="32"/>
+              <backgroundColor>-16737793</backgroundColor>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="392" y="504" w="96" h="32"/>
+              <foregroundColor>-13382401</foregroundColor>
+            </attributes>
+          </label>
+        </container>
+        <container id="Inform_Rejection">
+          <vertex>
+            <attributes>
+              <bounds x="739" y="360" w="28" h="28"/>
+              <backgroundColor>-13395457</backgroundColor>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="712" y="388" w="84" h="32"/>
+              <foregroundColor>-13382401</foregroundColor>
+            </attributes>
+          </label>
+          <decorator type="XOR_split">
+            <position>13</position>
+            <attributes>
+              <bounds x="766" y="360" w="10" h="28"/>
+            </attributes>
+          </decorator>
+          <decorator type="XOR_join">
+            <position>12</position>
+            <attributes>
+              <bounds x="730" y="360" w="10" h="28"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="Determine_benefits_and_n.installements">
+          <vertex>
+            <attributes>
+              <bounds x="708" y="116" w="32" h="32"/>
+              <backgroundColor>-16737793</backgroundColor>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="676" y="148" w="97" h="49"/>
+              <foregroundColor>-13382401</foregroundColor>
+            </attributes>
+          </label>
+        </container>
+        <container id="Dummy">
+          <vertex>
+            <attributes>
+              <bounds x="343" y="232" w="28" h="28"/>
+              <backgroundColor>-13395457</backgroundColor>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="314" y="260" w="84" h="16"/>
+              <foregroundColor>-13382401</foregroundColor>
+            </attributes>
+          </label>
+          <decorator type="XOR_split">
+            <position>13</position>
+            <attributes>
+              <bounds x="370" y="232" w="10" h="28"/>
+            </attributes>
+          </decorator>
+          <decorator type="AND_join">
+            <position>12</position>
+            <attributes>
+              <bounds x="334" y="232" w="10" h="28"/>
+            </attributes>
+          </decorator>
+        </container>
+        <flow source="Consult_Archive" target="Document_Check">
+          <ports in="2" out="4"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+            <points>
+              <value x="520" y="73,5"/>
+              <value x="494,5" y="360"/>
+            </points>
+          </attributes>
+        </flow>
+        <flow source="Pay" target="Pay">
+          <ports in="2" out="2"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+            <points>
+              <value x="843" y="129,5"/>
+              <value x="863" y="129,5"/>
+              <value x="863" y="96"/>
+              <value x="780" y="96"/>
+              <value x="780" y="129,5"/>
+              <value x="800" y="129,5"/>
+            </points>
+          </attributes>
+        </flow>
+        <flow source="Dummy" target="Consult_Archive">
+          <ports in="1" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+            <points>
+              <value x="379" y="238,75"/>
+              <value x="484" y="73,5"/>
+            </points>
+          </attributes>
+        </flow>
+        <flow source="Pay" target="OutputCondition">
+          <ports in="2" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+            <points>
+              <value x="807" y="133,5"/>
+              <value x="964" y="201,5"/>
+            </points>
+          </attributes>
+        </flow>
+        <flow source="Process_Documents" target="Document_Check">
+          <ports in="12" out="2"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+            <points>
+              <value x="424" y="483,5"/>
+              <value x="424" y="372"/>
+              <value x="490" y="373,5"/>
+            </points>
+          </attributes>
+        </flow>
+        <flow source="Task_Register" target="Request_to_the_last_employeer">
+          <ports in="1" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+            <points>
+              <value x="144" y="242,75"/>
+              <value x="204" y="145,5"/>
+            </points>
+          </attributes>
+        </flow>
+        <flow source="Request_for_family_income" target="Dummy">
+          <ports in="13" out="3"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+            <points>
+              <value x="235" y="357,5"/>
+              <value x="334" y="252,25"/>
+            </points>
+          </attributes>
+        </flow>
+        <flow source="Assess_Benefit" target="Determine_benefits_and_n.installements">
+          <ports in="3" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Request_to_the_last_employeer" target="Dummy">
+          <ports in="13" out="1"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+            <points>
+              <value x="231" y="145,5"/>
+              <value x="334" y="238,75"/>
+            </points>
+          </attributes>
+        </flow>
+        <flow source="Receive_Appeal" target="Process_Documents">
+          <ports in="12" out="13"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Task_Register" target="Request_for_family_income">
+          <ports in="3" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+            <points>
+              <value x="144" y="256,25"/>
+              <value x="208" y="357,5"/>
+            </points>
+          </attributes>
+        </flow>
+        <flow source="Consult_Archive" target="Assess_Benefit">
+          <ports in="2" out="2"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+            <points>
+              <value x="520" y="73,5"/>
+              <value x="630" y="257,5"/>
+            </points>
+          </attributes>
+        </flow>
+        <flow source="Determine_benefits_and_n.installements" target="Pay">
+          <ports in="13" out="2"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="C" target="Receive_Appeal">
+          <ports in="13" out="13"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+            <points>
+              <value x="839" y="375,5"/>
+              <value x="840" y="484"/>
+              <value x="711" y="485,5"/>
+            </points>
+          </attributes>
+        </flow>
+        <flow source="Inform_Rejection" target="C">
+          <ports in="2" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Document_Check" target="Inform_Rejection">
+          <ports in="3" out="3"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+            <points>
+              <value x="535" y="380,25"/>
+              <value x="770" y="380,25"/>
+            </points>
+          </attributes>
+        </flow>
+        <flow source="Assess_Benefit" target="Inform_Rejection">
+          <ports in="3" out="1"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+            <points>
+              <value x="675" y="264,25"/>
+              <value x="728" y="264"/>
+              <value x="726" y="362,75"/>
+            </points>
+          </attributes>
+        </flow>
+        <flow source="Dummy" target="Document_Check">
+          <ports in="3" out="2"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+            <points>
+              <value x="379" y="252,25"/>
+              <value x="490" y="373,5"/>
+            </points>
+          </attributes>
+        </flow>
+        <flow source="C" target="Timeout">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Timeout" target="OutputCondition">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+            <points>
+              <value x="891" y="285,5"/>
+              <value x="964" y="201,5"/>
+            </points>
+          </attributes>
+        </flow>
+        <flow source="Document_Check" target="Assess_Benefit">
+          <ports in="2" out="3"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+            <points>
+              <value x="535" y="373,5"/>
+              <value x="630" y="264,25"/>
+            </points>
+          </attributes>
+        </flow>
+        <flow source="InputCondition" target="Task_Register">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+            <points>
+              <value x="51" y="249,5"/>
+              <value x="108" y="249,5"/>
+            </points>
+          </attributes>
+        </flow>
+      </net>
+      <labelFontSize>13</labelFontSize>
+    </specification>
+  </layout>
+</specificationSet>

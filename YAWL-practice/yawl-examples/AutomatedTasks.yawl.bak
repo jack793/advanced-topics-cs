@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<specificationSet xmlns="http://www.yawlfoundation.org/yawlschema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.0" xsi:schemaLocation="http://www.yawlfoundation.org/yawlschema http://www.yawlfoundation.org/yawlschema/YAWL_Schema4.0.xsd">
+  <specification uri="AutomatedTasks">
+    <documentation>No description provided</documentation>
+    <metaData>
+      <creator>max</creator>
+      <description>No description provided</description>
+      <coverage>4.2.759</coverage>
+      <version>0.7</version>
+      <persistent>false</persistent>
+      <identifier>UID_f8be90c3-860d-4ecf-8e8d-985bd5a2844b</identifier>
+    </metaData>
+    <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" />
+    <decomposition id="Example" isRootNet="true" xsi:type="NetFactsType">
+      <localVariable>
+        <index>0</index>
+        <name>y</name>
+        <type>integer</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+        <initialValue>0</initialValue>
+      </localVariable>
+      <localVariable>
+        <index>1</index>
+        <name>x</name>
+        <type>integer</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+      </localVariable>
+      <processControlElements>
+        <inputCondition id="InputCondition">
+          <flowsInto>
+            <nextElementRef id="Write_X" />
+          </flowsInto>
+        </inputCondition>
+        <task id="Write_X">
+          <name>Write X</name>
+          <flowsInto>
+            <nextElementRef id="Y2x" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <completedMappings>
+            <mapping>
+              <expression query="&lt;x&gt;{/Write_X/x/text()}&lt;/x&gt;" />
+              <mapsTo>x</mapsTo>
+            </mapping>
+          </completedMappings>
+          <timer>
+            <trigger>OnEnabled</trigger>
+            <duration>PT30S</duration>
+          </timer>
+          <resourcing>
+            <offer initiator="system">
+              <distributionSet>
+                <initialSet>
+                  <role>RO-eef4d92e-6a32-4e71-9678-47d48f7c8a7f</role>
+                </initialSet>
+              </distributionSet>
+            </offer>
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="Write_X" />
+        </task>
+        <task id="Y2x">
+          <name>Y=2*x</name>
+          <flowsInto>
+            <nextElementRef id="Show_Y" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <startingMappings>
+            <mapping>
+              <expression query="&lt;query&gt;{xs:integer(/Example/x/text())*2}&lt;/query&gt;" />
+              <mapsTo>query</mapsTo>
+            </mapping>
+          </startingMappings>
+          <completedMappings>
+            <mapping>
+              <expression query="&lt;y&gt;{/Yis2X/result/text()}&lt;/y&gt;" />
+              <mapsTo>y</mapsTo>
+            </mapping>
+          </completedMappings>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="Yis2X" />
+        </task>
+        <task id="Show_Y">
+          <name>Show Y</name>
+          <flowsInto>
+            <nextElementRef id="OutputCondition" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <startingMappings>
+            <mapping>
+              <expression query="&lt;y&gt;{/Example/y/text()}&lt;/y&gt;" />
+              <mapsTo>y</mapsTo>
+            </mapping>
+          </startingMappings>
+          <resourcing>
+            <offer initiator="system">
+              <distributionSet>
+                <initialSet>
+                  <role>RO-eef4d92e-6a32-4e71-9678-47d48f7c8a7f</role>
+                </initialSet>
+              </distributionSet>
+              <familiarParticipant taskID="Write_X" />
+            </offer>
+            <allocate initiator="system">
+              <allocator>
+                <name>RandomChoice</name>
+              </allocator>
+            </allocate>
+            <start initiator="system" />
+          </resourcing>
+          <decomposesTo id="T2" />
+        </task>
+        <outputCondition id="OutputCondition" />
+      </processControlElements>
+    </decomposition>
+    <decomposition id="T2" xsi:type="WebServiceGatewayFactsType">
+      <inputParam>
+        <index>0</index>
+        <name>y</name>
+        <type>integer</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+      </inputParam>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="Write_X" xsi:type="WebServiceGatewayFactsType">
+      <name>Write X</name>
+      <outputParam>
+        <index>0</index>
+        <name>x</name>
+        <type>integer</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+        <defaultValue>1</defaultValue>
+      </outputParam>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="Yis2X" xsi:type="WebServiceGatewayFactsType">
+      <name>Y=2*x</name>
+      <inputParam>
+        <index>0</index>
+        <name>query</name>
+        <type>int</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+      </inputParam>
+      <outputParam>
+        <index>1</index>
+        <name>result</name>
+        <type>integer</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+      </outputParam>
+      <codelet>org.yawlfoundation.yawl.resourcing.codelets.XQueryEvaluator</codelet>
+      <externalInteraction>automated</externalInteraction>
+    </decomposition>
+  </specification>
+  <layout>
+    <locale language="it" country="IT"/>
+    <specification id="AutomatedTasks" defaultBgColor="-526351">
+      <size w="63" h="33"/>
+      <net id="Example">
+        <bounds x="0" y="0" w="1044" h="571"/>
+        <frame x="0" y="0" w="1047" h="574"/>
+        <viewport x="0" y="0" w="1047" h="574"/>
+        <vertex id="OutputCondition">
+          <attributes>
+            <bounds x="816" y="232" w="32" h="32"/>
+          </attributes>
+        </vertex>
+        <vertex id="InputCondition">
+          <attributes>
+            <bounds x="128" y="232" w="32" h="32"/>
+          </attributes>
+        </vertex>
+        <container id="Show_Y">
+          <vertex>
+            <attributes>
+              <bounds x="644" y="232" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="612" y="264" w="97" h="17"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Write_X">
+          <vertex>
+            <attributes>
+              <bounds x="288" y="232" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="256" y="264" w="97" h="17"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Y2x">
+          <vertex>
+            <iconpath>gear.png</iconpath>
+            <attributes>
+              <bounds x="492" y="232" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="460" y="264" w="97" h="17"/>
+            </attributes>
+          </label>
+        </container>
+        <flow source="Write_X" target="Y2x">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+            <points>
+              <value x="319" y="247,5"/>
+              <value x="492" y="247,5"/>
+            </points>
+          </attributes>
+        </flow>
+        <flow source="Show_Y" target="OutputCondition">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+            <points>
+              <value x="675" y="247,5"/>
+              <value x="816" y="247,5"/>
+            </points>
+          </attributes>
+        </flow>
+        <flow source="InputCondition" target="Write_X">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+            <points>
+              <value x="159" y="247,5"/>
+              <value x="288" y="247,5"/>
+            </points>
+          </attributes>
+        </flow>
+        <flow source="Y2x" target="Show_Y">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+            <points>
+              <value x="523" y="247,5"/>
+              <value x="644" y="247,5"/>
+            </points>
+          </attributes>
+        </flow>
+      </net>
+      <labelFontSize>13</labelFontSize>
+    </specification>
+  </layout>
+</specificationSet>
