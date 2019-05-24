@@ -1,0 +1,665 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<specificationSet xmlns="http://www.yawlfoundation.org/yawlschema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.0" xsi:schemaLocation="http://www.yawlfoundation.org/yawlschema http://www.yawlfoundation.org/yawlschema/YAWL_Schema4.0.xsd">
+  <specification uri="Part3">
+    <documentation>No description provided</documentation>
+    <metaData>
+      <creator>franz</creator>
+      <description>No description provided</description>
+      <coverage>4.2.759</coverage>
+      <version>0.30</version>
+      <persistent>false</persistent>
+      <identifier>UID_14a63364-8201-4406-a16d-f8b860852fc8</identifier>
+    </metaData>
+    <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" />
+    <decomposition id="Net" isRootNet="true" xsi:type="NetFactsType">
+      <localVariable>
+        <index>0</index>
+        <name>ArtNumber</name>
+        <type>int</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+        <initialValue>0</initialValue>
+      </localVariable>
+      <localVariable>
+        <index>1</index>
+        <name>Name</name>
+        <type>string</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+        <initialValue />
+      </localVariable>
+      <localVariable>
+        <index>2</index>
+        <name>Address</name>
+        <type>string</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+        <initialValue />
+      </localVariable>
+      <localVariable>
+        <index>3</index>
+        <name>ViolationAmount</name>
+        <type>double</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+        <initialValue>0</initialValue>
+      </localVariable>
+      <localVariable>
+        <index>4</index>
+        <name>AmountPaid</name>
+        <type>double</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+        <initialValue>0</initialValue>
+      </localVariable>
+      <localVariable>
+        <index>5</index>
+        <name>SumPaid</name>
+        <type>double</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+        <initialValue>0</initialValue>
+      </localVariable>
+      <processControlElements>
+        <inputCondition id="InputCondition">
+          <flowsInto>
+            <nextElementRef id="Insert_Ticket" />
+          </flowsInto>
+        </inputCondition>
+        <task id="Insert_Ticket">
+          <name>Insert Ticket</name>
+          <flowsInto>
+            <nextElementRef id="C1" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <completedMappings>
+            <mapping>
+              <expression query="&lt;ViolationAmount&gt;{/Insert_Ticket/ViolationAmount/text()}&lt;/ViolationAmount&gt;" />
+              <mapsTo>ViolationAmount</mapsTo>
+            </mapping>
+            <mapping>
+              <expression query="&lt;Name&gt;{/Insert_Ticket/Name/text()}&lt;/Name&gt;" />
+              <mapsTo>Name</mapsTo>
+            </mapping>
+            <mapping>
+              <expression query="&lt;Address&gt;{/Insert_Ticket/Address/text()}&lt;/Address&gt;" />
+              <mapsTo>Address</mapsTo>
+            </mapping>
+            <mapping>
+              <expression query="&lt;ArtNumber&gt;{/Insert_Ticket/ArtNumber/text()}&lt;/ArtNumber&gt;" />
+              <mapsTo>ArtNumber</mapsTo>
+            </mapping>
+          </completedMappings>
+          <resourcing>
+            <offer initiator="system">
+              <distributionSet>
+                <initialSet>
+                  <role>RO-6104c094-fa81-4fc2-9145-45ee8c469c80</role>
+                </initialSet>
+              </distributionSet>
+            </offer>
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="Insert_Ticket" />
+        </task>
+        <condition id="C1">
+          <flowsInto>
+            <nextElementRef id="Archive_The_Ticket_As_Expired" />
+          </flowsInto>
+          <flowsInto>
+            <nextElementRef id="Prepare_And_Send" />
+          </flowsInto>
+        </condition>
+        <task id="Archive_The_Ticket_As_Expired">
+          <name>Archive The Ticket As Expired</name>
+          <flowsInto>
+            <nextElementRef id="OutputCondition" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <timer>
+            <trigger>OnEnabled</trigger>
+            <duration>P10D</duration>
+          </timer>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="Archive_The_Ticket_As_Expired" />
+        </task>
+        <task id="Prepare_And_Send">
+          <name>Prepare And Send</name>
+          <flowsInto>
+            <nextElementRef id="Add_Ticket_for_Credit_Collection" />
+          </flowsInto>
+          <flowsInto>
+            <nextElementRef id="C2" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <startingMappings>
+            <mapping>
+              <expression query="&lt;ArtNumber&gt;{/Net/ArtNumber/text()}&lt;/ArtNumber&gt;" />
+              <mapsTo>ArtNumber</mapsTo>
+            </mapping>
+            <mapping>
+              <expression query="&lt;ViolationAmount&gt;{/Net/ViolationAmount/text()}&lt;/ViolationAmount&gt;" />
+              <mapsTo>ViolationAmount</mapsTo>
+            </mapping>
+            <mapping>
+              <expression query="&lt;Address&gt;{/Net/Address/text()}&lt;/Address&gt;" />
+              <mapsTo>Address</mapsTo>
+            </mapping>
+            <mapping>
+              <expression query="&lt;Name&gt;{/Net/Name/text()}&lt;/Name&gt;" />
+              <mapsTo>Name</mapsTo>
+            </mapping>
+          </startingMappings>
+          <resourcing>
+            <offer initiator="system">
+              <distributionSet>
+                <initialSet>
+                  <role>RO-ba25944e-8809-49b7-b918-5175af044b09</role>
+                </initialSet>
+              </distributionSet>
+            </offer>
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="Prepare_And_Send" />
+        </task>
+        <condition id="C2">
+          <flowsInto>
+            <nextElementRef id="Process_Payment" />
+          </flowsInto>
+        </condition>
+        <task id="Add_Ticket_for_Credit_Collection">
+          <name>Add Ticket for Credit Collection</name>
+          <flowsInto>
+            <nextElementRef id="OutputCondition" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <removesTokens id="Add_Amount" />
+          <removesTokens id="C2" />
+          <removesTokens id="Process_Payment" />
+          <timer>
+            <trigger>OnEnabled</trigger>
+            <duration>P6M</duration>
+          </timer>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="Add_Ticket_for_Credit_Collection" />
+        </task>
+        <task id="Process_Payment">
+          <name>Process Payment</name>
+          <flowsInto>
+            <nextElementRef id="Add_Amount" />
+          </flowsInto>
+          <join code="and" />
+          <split code="and" />
+          <startingMappings>
+            <mapping>
+              <expression query="&lt;ViolationAmount&gt;{/Net/ViolationAmount/text()}&lt;/ViolationAmount&gt;" />
+              <mapsTo>ViolationAmount</mapsTo>
+            </mapping>
+            <mapping>
+              <expression query="&lt;Adress&gt;{/Net/Address/text()}&lt;/Adress&gt;" />
+              <mapsTo>Adress</mapsTo>
+            </mapping>
+            <mapping>
+              <expression query="&lt;Name&gt;{/Net/Name/text()}&lt;/Name&gt;" />
+              <mapsTo>Name</mapsTo>
+            </mapping>
+            <mapping>
+              <expression query="&lt;PartialPayment&gt;{/Net/SumPaid/text()}&lt;/PartialPayment&gt;" />
+              <mapsTo>PartialPayment</mapsTo>
+            </mapping>
+          </startingMappings>
+          <completedMappings>
+            <mapping>
+              <expression query="&lt;AmountPaid&gt;{/Process_Payment/AmountPaid/text()}&lt;/AmountPaid&gt;" />
+              <mapsTo>AmountPaid</mapsTo>
+            </mapping>
+          </completedMappings>
+          <resourcing>
+            <offer initiator="system">
+              <distributionSet>
+                <initialSet>
+                  <role>RO-e7d2a64b-a462-4c64-a424-0913d4bc8dab</role>
+                </initialSet>
+              </distributionSet>
+            </offer>
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="Process_Payment" />
+        </task>
+        <task id="Add_Amount">
+          <name>Add Amount</name>
+          <flowsInto>
+            <nextElementRef id="dummy" />
+            <predicate ordering="0">number(/Net/SumPaid/text()) &gt;= number(/Net/ViolationAmount/text())</predicate>
+          </flowsInto>
+          <flowsInto>
+            <nextElementRef id="C2" />
+            <isDefaultFlow />
+          </flowsInto>
+          <join code="and" />
+          <split code="xor" />
+          <startingMappings>
+            <mapping>
+              <expression query="&lt;ViolationAmount&gt;{/Net/ViolationAmount/text()}&lt;/ViolationAmount&gt;" />
+              <mapsTo>ViolationAmount</mapsTo>
+            </mapping>
+            <mapping>
+              <expression query="&lt;SumPaid&gt;{/Net/SumPaid/text()}&lt;/SumPaid&gt;" />
+              <mapsTo>SumPaid</mapsTo>
+            </mapping>
+            <mapping>
+              <expression query="&lt;AmountPaid&gt;{/Net/AmountPaid/text()}&lt;/AmountPaid&gt;" />
+              <mapsTo>AmountPaid</mapsTo>
+            </mapping>
+            <mapping>
+              <expression query="&lt;query&gt;{number(/Net/SumPaid/text()) + number(/Net/AmountPaid/text())}&lt;/query&gt;" />
+              <mapsTo>query</mapsTo>
+            </mapping>
+          </startingMappings>
+          <completedMappings>
+            <mapping>
+              <expression query="&lt;SumPaid&gt;{/Add_Amount/result/text()}&lt;/SumPaid&gt;" />
+              <mapsTo>SumPaid</mapsTo>
+            </mapping>
+          </completedMappings>
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+          <decomposesTo id="Add_Amount" />
+        </task>
+        <task id="dummy">
+          <flowsInto>
+            <nextElementRef id="OutputCondition" />
+          </flowsInto>
+          <join code="xor" />
+          <split code="and" />
+          <removesTokens id="Add_Ticket_for_Credit_Collection" />
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+        </task>
+        <outputCondition id="OutputCondition" />
+      </processControlElements>
+    </decomposition>
+    <decomposition id="Add_Amount" xsi:type="WebServiceGatewayFactsType">
+      <name>Add Amount</name>
+      <inputParam>
+        <index>0</index>
+        <name>query</name>
+        <type>string</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+      </inputParam>
+      <inputParam>
+        <index>2</index>
+        <name>AmountPaid</name>
+        <type>double</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+      </inputParam>
+      <inputParam>
+        <index>3</index>
+        <name>ViolationAmount</name>
+        <type>double</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+      </inputParam>
+      <inputParam>
+        <index>3</index>
+        <name>SumPaid</name>
+        <type>double</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+      </inputParam>
+      <outputParam>
+        <index>1</index>
+        <name>result</name>
+        <type>double</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+      </outputParam>
+      <codelet>org.yawlfoundation.yawl.resourcing.codelets.XQueryEvaluator</codelet>
+      <externalInteraction>automated</externalInteraction>
+    </decomposition>
+    <decomposition id="Add_Ticket_for_Credit_Collection" xsi:type="WebServiceGatewayFactsType">
+      <name>Add Ticket for Credit Collection</name>
+      <externalInteraction>automated</externalInteraction>
+    </decomposition>
+    <decomposition id="Archive_The_Ticket_As_Expired" xsi:type="WebServiceGatewayFactsType">
+      <name>Archive The Ticket As Expired</name>
+      <externalInteraction>automated</externalInteraction>
+    </decomposition>
+    <decomposition id="Insert_Ticket" xsi:type="WebServiceGatewayFactsType">
+      <name>Insert Ticket</name>
+      <outputParam>
+        <index>0</index>
+        <name>ArtNumber</name>
+        <type>int</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+        <defaultValue />
+      </outputParam>
+      <outputParam>
+        <index>1</index>
+        <name>Name</name>
+        <type>string</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+        <defaultValue />
+      </outputParam>
+      <outputParam>
+        <index>2</index>
+        <name>Address</name>
+        <type>string</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+        <defaultValue />
+      </outputParam>
+      <outputParam>
+        <index>3</index>
+        <name>ViolationAmount</name>
+        <type>double</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+        <defaultValue />
+      </outputParam>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="Prepare_And_Send" xsi:type="WebServiceGatewayFactsType">
+      <name>Prepare And Send</name>
+      <inputParam>
+        <index>0</index>
+        <name>ArtNumber</name>
+        <type>int</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+      </inputParam>
+      <inputParam>
+        <index>1</index>
+        <name>Name</name>
+        <type>string</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+      </inputParam>
+      <inputParam>
+        <index>2</index>
+        <name>Address</name>
+        <type>string</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+      </inputParam>
+      <inputParam>
+        <index>3</index>
+        <name>ViolationAmount</name>
+        <type>double</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+      </inputParam>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+    <decomposition id="Process_Payment" xsi:type="WebServiceGatewayFactsType">
+      <name>Process Payment</name>
+      <inputParam>
+        <index>0</index>
+        <name>Name</name>
+        <type>string</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+      </inputParam>
+      <inputParam>
+        <index>1</index>
+        <name>Adress</name>
+        <type>string</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+      </inputParam>
+      <inputParam>
+        <index>2</index>
+        <name>ViolationAmount</name>
+        <type>double</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+      </inputParam>
+      <inputParam>
+        <index>3</index>
+        <name>PartialPayment</name>
+        <type>double</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+      </inputParam>
+      <outputParam>
+        <index>4</index>
+        <name>AmountPaid</name>
+        <type>double</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+        <defaultValue />
+      </outputParam>
+      <externalInteraction>manual</externalInteraction>
+    </decomposition>
+  </specification>
+  <layout>
+    <locale language="it" country="IT"/>
+    <specification id="Part3" defaultBgColor="-526351">
+      <size w="58" h="26"/>
+      <net id="Net">
+        <bounds x="0" y="0" w="1189" h="573"/>
+        <frame x="0" y="0" w="1207" h="537"/>
+        <viewport x="0" y="0" w="1207" h="537"/>
+        <vertex id="OutputCondition">
+          <attributes>
+            <bounds x="708" y="336" w="32" h="32"/>
+          </attributes>
+        </vertex>
+        <vertex id="InputCondition">
+          <attributes>
+            <bounds x="36" y="328" w="32" h="32"/>
+          </attributes>
+        </vertex>
+        <vertex id="C1">
+          <attributes>
+            <bounds x="240" y="328" w="32" h="32"/>
+          </attributes>
+        </vertex>
+        <vertex id="C2">
+          <attributes>
+            <bounds x="452" y="236" w="32" h="32"/>
+          </attributes>
+        </vertex>
+        <vertex id="dummy">
+          <attributes>
+            <bounds x="704" y="140" w="32" h="32"/>
+            <backgroundColor>-6710785</backgroundColor>
+          </attributes>
+        </vertex>
+        <container id="Add_Amount">
+          <vertex>
+            <iconpath>gear.png</iconpath>
+            <attributes>
+              <bounds x="464" y="148" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="436" y="180" w="97" h="17"/>
+            </attributes>
+          </label>
+          <decorator type="XOR_split">
+            <position>13</position>
+            <attributes>
+              <bounds x="495" y="148" w="11" h="32"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="Process_Payment">
+          <vertex>
+            <attributes>
+              <bounds x="312" y="148" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="280" y="180" w="97" h="33"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Insert_Ticket">
+          <vertex>
+            <attributes>
+              <bounds x="128" y="328" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="96" y="360" w="97" h="17"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Archive_The_Ticket_As_Expired">
+          <vertex>
+            <iconpath>alarm-clock-blue.png</iconpath>
+            <attributes>
+              <bounds x="240" y="472" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="208" y="504" w="97" h="49"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Add_Ticket_for_Credit_Collection">
+          <vertex>
+            <iconpath>alarm-clock-blue.png</iconpath>
+            <attributes>
+              <bounds x="588" y="336" w="32" h="32"/>
+              <backgroundColor>-6710785</backgroundColor>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="556" y="368" w="97" h="49"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="Prepare_And_Send">
+          <vertex>
+            <attributes>
+              <bounds x="344" y="328" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="316" y="360" w="97" h="33"/>
+            </attributes>
+          </label>
+          <decorator type="AND_split">
+            <position>13</position>
+            <attributes>
+              <bounds x="375" y="328" w="11" h="32"/>
+            </attributes>
+          </decorator>
+        </container>
+        <flow source="Process_Payment" target="Add_Amount">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+            <points>
+              <value x="547" y="163,5"/>
+              <value x="736" y="163,5"/>
+            </points>
+          </attributes>
+        </flow>
+        <flow source="InputCondition" target="Insert_Ticket">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Prepare_And_Send" target="Add_Ticket_for_Credit_Collection">
+          <ports in="3" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Add_Ticket_for_Credit_Collection" target="OutputCondition">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="C1" target="Prepare_And_Send">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Archive_The_Ticket_As_Expired" target="OutputCondition">
+          <ports in="13" out="11"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+            <points>
+              <value x="271" y="487,5"/>
+              <value x="724" y="488"/>
+              <value x="723,5" y="367"/>
+            </points>
+          </attributes>
+        </flow>
+        <flow source="C1" target="Archive_The_Ticket_As_Expired">
+          <ports in="11" out="10"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Insert_Ticket" target="C1">
+          <ports in="13" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="C2" target="Process_Payment">
+          <ports in="12" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+            <points>
+              <value x="500" y="259,5"/>
+              <value x="268" y="252"/>
+              <value x="268" y="162"/>
+              <value x="312" y="163,5"/>
+            </points>
+          </attributes>
+        </flow>
+        <flow source="dummy" target="OutputCondition">
+          <ports in="11" out="10"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Add_Amount" target="C2">
+          <ports in="3" out="13"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+            <points>
+              <value x="505" y="171,25"/>
+              <value x="620" y="172"/>
+              <value x="620" y="252"/>
+              <value x="483" y="251,5"/>
+            </points>
+          </attributes>
+        </flow>
+        <flow source="Add_Amount" target="dummy">
+          <ports in="1" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="Prepare_And_Send" target="C2">
+          <ports in="2" out="11"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+            <points>
+              <value x="385" y="343,5"/>
+              <value x="468" y="344"/>
+              <value x="467,5" y="267"/>
+            </points>
+          </attributes>
+        </flow>
+      </net>
+    </specification>
+  </layout>
+</specificationSet>

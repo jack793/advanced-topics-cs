@@ -1,0 +1,44 @@
+\documentclass[../Relazione.tex]{subfiles}
+
+\begin{document}
+\section{Test eseguiti}
+    I test seguenti sono stati svolti per verificare la correttezza della rete. I valori dei timers sono stati modificati unicamente allo scopo di effettuare i test. I valori relativi sono i seguenti:
+    \begin{itemize}
+        \item Il timer relativo al task \texttt{Archive The Ticket As Expired} è stato diminuito da 10 giorni a 30 secondi;
+        \item Il timer relativo al task \texttt{Add Ticket For Credit Collection} è stato diminuito da 180 giorni a 50 secondi.
+    \end{itemize}
+    Il browser utilizzato durante i test per gestire il "Pannello di Controllo" dei vari utenti è \textbf{Opera v. 60.0.3255.109} su un sistema operativo macOS Mojave 10.14.5 (18F132).
+    In questa sezione verranno riportati i test eseguiti passo per passo:
+    \begin{itemize}
+        \item Test 1
+        \begin{enumerate}
+            \item L'utente Franz accetta il task \texttt{Insert Ticket} ed inserisce i dati richiesti;
+            \item Nessun utente di tipo \textit{Prepare And Send} accetta l'offerta relativa;
+            \item Dopo 30 secondi viene esegiuto il task \texttt{Archive The Ticket As Expired} ed il processo termina correttamente.
+        \end{enumerate}
+        \item Test 2
+        \begin{enumerate}
+            \item L'utente ABari accetta il task \texttt{Insert Ticket} ed inserisce i dati richiesti;
+            \item L'utente GS accetta il task \texttt{Prepare And Send} e lo completa confermando i dati inseriti;
+            \item Il trasgressore non paga nessuna somma, quindi nessun utente di tipo \textit{Processor} esegue \texttt{Process Payment};
+            \item Dopo 50 secondi viene eseguito il task \texttt{Add Ticket For Credit Collection} ed il processo termina correttamente.
+        \end{enumerate}
+        \item Test 3
+        \begin{enumerate}
+            \item L'utente Franz accetta il task \texttt{Insert Ticket} ed inserisce i dati richiesti;
+            \item L'utente JZ accetta il task \texttt{Prepare And Send} e lo completa confermando i dati inseriti;
+            \item Il trasgressore paga una somma inferiore al totale richiesto, quindi il flusso torna alla Deferred Choice \texttt{Ticket Sent};
+            \item Il trasgressore paga un'altra somma, che aggiunta alla precedente \textbf{non} supera o eguaglia il totale richiesto, quindi il flusso torna alla Deferred Choice \texttt{Ticket Sent};
+            \item Scadono i 50 secondi, viene comunque eseguito il task \texttt{Add Ticket For Credit Collection} ed il processo termina correttamente.
+        \end{enumerate}
+        \item Test 4
+        \begin{enumerate}
+            \item L'utente ABari accetta il task \texttt{Insert Ticket} ed inserisce i dati richiesti;
+            \item L'utente GS accetta il task \texttt{Prepare And Send} e lo completa confermando i dati inseriti;
+            \item Il trasgressore paga una somma inferiore al totale richiesto, quindi il flusso torna alla Deferred Choice \texttt{Ticket Sent};
+            \item Il trasgressore paga un'altra somma, che aggiunta alla precedente \textbf{non} supera o eguaglia il totale richiesto, quindi il flusso torna alla Deferred Choice \texttt{Ticket Sent};
+            \item Il trasgressore paga un'altra somma, che aggiunta alle precedenti, questa volta, supera o eguaglia il totale richiesto, entro i 50 secondi, quindi il processo termina correttamente.
+        \end{enumerate}
+    \end{itemize}
+    
+\end{document}

@@ -1,0 +1,80 @@
+\documentclass[../Relazione.tex]{subfiles}
+
+\begin{document}
+\section{Variabili e ruoli del modello}
+    In questa sezione verranno elencate tutte le variabili utilizzate all'interno della rete ed i ruoli (con relativo personale) disponibili.
+    
+    \subsection{Variabili}
+    Tralasciando le variabili di rete \textit{Name}, \textit{Address} e \textit{ArtNumber}, che vengono utilizzate per identificare univocamente una multa, andremo a descrivere le variabili fondamentali per il corretto funzionamento del processo (tutte le variabili di tipo numerico sono sempre inizializzate a 0).
+    La variabile \textit{ViolationAmount}, inserita nella rete dal task \texttt{Insert Ticket}, rappresenta la somma totale che il trasgressore deve pagare.
+    \textit{AmountPaid} invece, è la variabile che rappresenta la somma versata dal trasgressore. La ricezione di questo pagamento comporta l'esecuzione del task \texttt{Process Payment}.
+    La variabile \textit{SumPaid} descrive, infine, la somma dei pagamenti parziali ricevuti.\\
+    La tabella seguente riporta tutte le variabili presenti nella rete, raggruppate per task:
+    
+    \begin{table}[!h]
+        \centering
+        \begin{tabular}{|c|l|c|c|}
+            \hline
+            \textbf{Task} & \textbf{Variabili} & \textbf{Tipo} & \textbf{Scope} \\
+            \hline
+            Insert Ticket & ArtNumber & int & Output \\
+                          & Name & string & Output \\
+                          & Address & string & Output \\
+                          & ViolationAmount & double & Output \\
+            \hline
+            Archive The Ticket As Expired & (Automated) & & \\
+            \hline
+            Prepare And Send & ArtNumber & int & Input \\
+                          & Name & string & Input \\
+                          & Address & string & Input \\
+                          & ViolationAmount & double & Input \\
+            \hline
+            Process Payment & Name & string & Input \\
+                            & Address & string & Input \\
+                            & ViolationAmount & double & Input \\
+                            & PartialPayment & double & Input \\
+                            & AmountPaid & double & Output \\
+            \hline
+            Add Amount & AmountPaid & double & Input \\
+                       & ViolationAmount & double & Input \\
+                       & SumPaid & double & Input \\
+                       & \textbf{query} & string & Input \\
+                       & \textbf{result} & double & Output (To Net \\
+                       & & & Variable SumPaid)\\
+           \hline
+           Add Ticket For Credit Collection & (Automated) & & \\
+           \hline
+           %dummy & & & \\
+           %\hline
+        \end{tabular}
+        \caption{Decomposition Variables}
+        \label{tab:vars}
+    \end{table}
+    
+    \noindent N.B.: la variabile di rete \textit{SumPaid}, all'interno del task \texttt{Process Payment}, assume il nome locale \textit{PartialPayment}. Abbiamo cambiato il nome della variabile poiché questa viene mostrata all'utente all'interno del proprio pannello di controllo e quindi risultava essere più 'user-friendly'.\\
+    Inoltre, il tast \texttt{dummy} (non presente in tabella \ref{tab:vars}) non è automatico e non contiene variabili associate, è stato creato appositamente per introdurre la Cancelation Region, che verrà descritta nella prossima sezione.
+    
+    \subsection{Ruoli}
+    Di seguito viene riportato l'elenco degli utenti creati ed i rispettivi ruoli:
+    
+    \begin{table}[!h]
+        \centering
+        \begin{tabular}{|c|c|c|c|}
+            \hline
+            \textbf{Utente} & \textbf{Username} & \textbf{Password} & \textbf{Ruolo} \\
+            \hline
+             Francesco Fasolato & Franz & 1234 & Insert Tickets \\
+             Alessandro Bari & ABari & 1234 & Insert Tickets \\
+             Giacomo Zecchin & JZ & 1234 & Prepare And Send \\
+             Guido Santi & GS & 1234 & Prepare And Send \\
+             Massimiliano De Leoni & MDL & 1234 & Processor \\
+             Filippo Berto & bertof & 1234 & Processor \\
+             \hline
+        \end{tabular}
+        \caption{Utenti \& Ruoli}
+        \label{tab:roles}
+    \end{table}
+    
+         
+\end{document} 
+		
