@@ -6,7 +6,7 @@
       <creator>franz</creator>
       <description>No description provided</description>
       <coverage>4.2.759</coverage>
-      <version>0.30</version>
+      <version>0.35</version>
       <persistent>false</persistent>
       <identifier>UID_14a63364-8201-4406-a16d-f8b860852fc8</identifier>
     </metaData>
@@ -285,6 +285,11 @@
           <join code="xor" />
           <split code="and" />
           <removesTokens id="Add_Ticket_for_Credit_Collection" />
+          <removesTokens id="Prepare_And_Send" />
+          <removesTokensFromFlow>
+            <flowSource id="Prepare_And_Send" />
+            <flowDestination id="Add_Ticket_for_Credit_Collection" />
+          </removesTokensFromFlow>
           <resourcing>
             <offer initiator="user" />
             <allocate initiator="user" />
@@ -438,9 +443,9 @@
     <specification id="Part3" defaultBgColor="-526351">
       <size w="58" h="26"/>
       <net id="Net">
-        <bounds x="0" y="0" w="1189" h="573"/>
-        <frame x="0" y="0" w="1207" h="537"/>
-        <viewport x="0" y="0" w="1207" h="537"/>
+        <bounds x="0" y="0" w="1204" h="676"/>
+        <frame x="0" y="0" w="1207" h="679"/>
+        <viewport x="0" y="0" w="1207" h="679"/>
         <vertex id="OutputCondition">
           <attributes>
             <bounds x="708" y="336" w="32" h="32"/>
@@ -600,14 +605,14 @@
             </points>
           </attributes>
         </flow>
-        <flow source="C1" target="Archive_The_Ticket_As_Expired">
-          <ports in="11" out="10"/>
+        <flow source="Insert_Ticket" target="C1">
+          <ports in="13" out="12"/>
           <attributes>
             <lineStyle>11</lineStyle>
           </attributes>
         </flow>
-        <flow source="Insert_Ticket" target="C1">
-          <ports in="13" out="12"/>
+        <flow source="C1" target="Archive_The_Ticket_As_Expired">
+          <ports in="11" out="10"/>
           <attributes>
             <lineStyle>11</lineStyle>
           </attributes>
@@ -642,12 +647,6 @@
             </points>
           </attributes>
         </flow>
-        <flow source="Add_Amount" target="dummy">
-          <ports in="1" out="12"/>
-          <attributes>
-            <lineStyle>11</lineStyle>
-          </attributes>
-        </flow>
         <flow source="Prepare_And_Send" target="C2">
           <ports in="2" out="11"/>
           <attributes>
@@ -657,6 +656,12 @@
               <value x="468" y="344"/>
               <value x="467,5" y="267"/>
             </points>
+          </attributes>
+        </flow>
+        <flow source="Add_Amount" target="dummy">
+          <ports in="1" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
           </attributes>
         </flow>
       </net>
